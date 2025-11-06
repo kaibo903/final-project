@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout🛎️
+        uses: actions/checkout@v3
+
+      - uses: oven-sh/setup-bun@v2 
+        with:
+          bun-version: latest
+
+      - name: Install 
+        run: bun install
+
+      - name: Build 🔨
+        run: bun run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist # The folder the action should deploy.
